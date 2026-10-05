@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.kurenn.trawl",
+  "name": "Trawl",
+  "version": "0.1.0",
+  "author": "kurenn",
+  "license": "MIT",
+  "description": "Google Drive and pCloud sync status in the Omarchy bar, with start/cancel controls, powered by trawl-cli.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "aliases": [
+      "trawl",
+      "sync",
+      "drive",
+      "pcloud"
+    ],
+    "displayName": "Trawl",
+    "description": "Shows Google Drive and pCloud sync status, lets you start or cancel syncs, and open mapping folders. Powered by trawl-cli.",
+    "category": "Files",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 30,
+      "cliPath": "trawl-cli"
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 5,
+        "max": 3600,
+        "step": 5,
+        "defaultValue": 30
+      },
+      {
+        "key": "cliPath",
+        "type": "string",
+        "label": "trawl-cli path",
+        "defaultValue": "trawl-cli"
+      }
+    ]
+  }
+}
