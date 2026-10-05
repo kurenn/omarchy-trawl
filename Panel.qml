@@ -37,6 +37,24 @@ Panel {
     else if (selectedIndex > n - 1) selectedIndex = Math.max(0, n - 1)
   }
 
+  function scrollSelectedIntoView() {
+    if (!flick || !rowRepeater) return
+    var item = rowRepeater.itemAt(root.selectedIndex)
+    if (!item) return
+    Qt.callLater(function() {
+      if (!item) return
+      var margin = Style.space(6)
+      var point = item.mapToItem(flick.contentItem, 0, 0)
+      var top = point.y
+      var bottom = top + item.height
+      var viewTop = flick.contentY
+      var viewBottom = viewTop + flick.height
+      var maxY = Math.max(0, flick.contentHeight - flick.height)
+      if (top < viewTop + margin) flick.contentY = Math.max(0, top - margin)
+      else if (bottom > viewBottom - margin) flick.contentY = Math.min(maxY, bottom + margin - flick.height)
+    })
+  }
+
   function selectedRow() {
     var list = svc.rows
     if (selectedIndex < 0 || selectedIndex >= list.length) return null
@@ -70,6 +88,8 @@ Panel {
       svc.actionMessage = ""
     }
   }
+
+  onSelectedIndexChanged: root.scrollSelectedIntoView()
 
   Service {
     id: svc
@@ -205,6 +225,7 @@ Panel {
           }
 
           Repeater {
+            id: rowRepeater
             model: svc.rows
 
             delegate: Component {

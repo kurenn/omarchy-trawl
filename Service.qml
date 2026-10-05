@@ -75,6 +75,7 @@ Item {
     id: pollTimer
     interval: Model.pollIntervalMs(root.panelOpen, Model.anyRunning(root.mappings), Model.refreshSec(root.settings))
     repeat: true
+    running: true
     triggeredOnStart: true
     onTriggered: root.refresh()
   }
@@ -145,8 +146,15 @@ Item {
         root.actionMessage = root._actionVerb + " timed out"
         root.actionIsError = true
       } else if (exitCode === 0) {
-        root.actionMessage = root._actionVerb === "start" ? "Sync started" : "Cancel requested"
-        root.actionIsError = false
+        var warning = String(actionStderr.text == null ? "" : actionStderr.text).trim()
+        if (warning !== "") {
+          if (warning.length > 300) warning = warning.substring(0, 300)
+          root.actionMessage = warning
+          root.actionIsError = true
+        } else {
+          root.actionMessage = root._actionVerb === "start" ? "Sync started" : "Cancel requested"
+          root.actionIsError = false
+        }
       } else {
         root.actionMessage = Model.actionError(root._actionVerb, exitCode, actionStderr.text)
         root.actionIsError = true
